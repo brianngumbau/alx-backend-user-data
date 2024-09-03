@@ -22,7 +22,6 @@ class Auth:
         if not path.endswith('/'):
             path += '/'
 
-
         for excluded_path in excluded_paths:
             if excluded_path.endswith('/') and excluded_path == path:
                 return False
@@ -33,7 +32,9 @@ class Auth:
         """
         Method to retrieve the authorization header from a request
         """
-        return None
+        if request is None:
+            return None
+        return request.headers.get('Authorization', None)
 
     def current_user(self, request=None) -> TypeVar('User'):
         """

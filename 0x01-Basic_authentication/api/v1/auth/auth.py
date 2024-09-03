@@ -6,6 +6,7 @@ Module for authentication
 from flask import request
 from typing import List, TypeVar
 
+
 class Auth:
     """
     Template for all authentication system implemented in this app.
@@ -15,7 +16,18 @@ class Auth:
         """
         Method to determine if authorization is required
         """
-        return False
+        if path is None or excluded_paths is None or not excluded_paths:
+            return True
+
+        if not path.endswith('/'):
+            path += '/'
+
+
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith('/') and excluded_path == path:
+                return False
+
+        return True
 
     def authorization_header(self, request=None) -> str:
         """

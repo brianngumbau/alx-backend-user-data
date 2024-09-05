@@ -15,6 +15,8 @@ from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
 from api.v1.views import app_views
 from api.v1.auth.session_auth import SessionAuth
+from api.v1.auth.session_db_auth import SessionDBAuth
+from api.v1.auth.session_exp_auth import SessionExpAuth
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
@@ -88,7 +90,8 @@ def handle_request():
     # Create list of excluded paths
     excluded_paths = ['/api/v1/status/',
                       '/api/v1/unauthorized/',
-                      '/api/v1/forbidden/']
+                      '/api/v1/forbidden/',
+                      '/api/v1/auth_session/login/']
     # if request.path is not part of the list above, do nothing
     # You must use the method require_auth from the auth instance
     if not auth.require_auth(request.path, excluded_paths):
@@ -96,7 +99,8 @@ def handle_request():
     # If auth.authorization_header(request) returns None, raise the error
     # 401 - you must use abort
     auth_header = auth.authorization_header(request)
-    if auth_header is None:
+    session_cookie = auth.session_cookie(request)
+    if auth_header is None and session_cookie is None::
         abort(401)
     # If auth.current_user(request) returns None, raise the error 403 - you
     # must use abort

@@ -2,7 +2,6 @@
 """Module for session authenticating views.
 """
 
-
 import os
 from typing import Tuple
 

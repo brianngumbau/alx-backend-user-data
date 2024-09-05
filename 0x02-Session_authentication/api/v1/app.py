@@ -29,7 +29,13 @@ auth = None
 #   create an instance of BasicAuth and assign it to the variable auth
 # Otherwise, keep the previous mechanism with auth an instance of Auth.
 auth_type = getenv('AUTH_TYPE', 'default')
-if auth_type == "basic_auth":
+if auth_type == "session_auth":
+    auth = SessionAuth()
+elif auth_type == 'session_exp_auth':
+    auth = SessionExpAuth()
+elif auth_type == 'session_db_auth':
+    auth = SessionDBAuth()
+elif auth_type == "basic_auth":
     auth = BasicAuth()
 else:
     auth = Auth()

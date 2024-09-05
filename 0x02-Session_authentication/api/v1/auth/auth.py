@@ -7,6 +7,7 @@ from flask import request
 from typing import List, TypeVar
 import os
 
+
 class Auth:
     """
     Template for all authentication system implemented in this app.

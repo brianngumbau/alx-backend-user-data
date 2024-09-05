@@ -97,6 +97,8 @@ def handle_request():
     if user is None:
         abort(403)
 
+    requests.current_user = user
+
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")

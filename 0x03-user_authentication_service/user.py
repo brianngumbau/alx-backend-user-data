@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
+""" User model
 """
-User model
-"""
-from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+
 
 Base = declarative_base()
 
 
 class User(Base):
-    """
-    User class for user authentication service
+    """ SQLAlchemy User model
     """
     __tablename__ = 'users'
 

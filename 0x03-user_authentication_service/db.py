@@ -1,31 +1,34 @@
 #!/usr/bin/env python3
-"""DB module
+"""
+DB module for database operations
 """
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-
-from user import Base, User
-from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
+from user import Base, User
 
 
 class DB:
-    """DB class
+    """
+    DB class
     """
 
     def __init__(self) -> None:
-        """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=False)
+        Initialize a new DB instance
+        """
+        self._engine = create_engine("sqlite:///a.db",
+                                     connect_args={"check_same_thread": False})
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
 
     @property
     def _session(self) -> Session:
-        """Memoized session object
+        """
+        Memoized session object
         """
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
@@ -54,13 +57,10 @@ class DB:
         Returns:
             User: The found user
         """
-        try:
-            user = self._session.query(User).filter_by(**kwargs).one_or_none()
-            if user is None:
-                raise NoResultFound("No user found")
-            return user
-        except InvalidRequestError:
-            raise InvalidRequestError("Invalid")
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if not user:
+            raise NoResultFound("No user found")
+        return user
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """

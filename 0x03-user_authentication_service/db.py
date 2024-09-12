@@ -7,6 +7,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
 from user import Base, User
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 
 
 class DB:
@@ -52,10 +54,13 @@ class DB:
         Returns:
             User: The found user
         """
-        user = self._session.query(User).filter_by(**kwargs).first()
-        if not user:
-            raise NoResultFound("No user found")
-        return user
+        try:
+            user = self._session.query(User).filter_by(**kwargs).one_or_none()
+            if user is None:
+                raise NoResultFound("No user found")
+            return user
+        except InvalidRequestError:
+            raise InvalidRequestError("Invalid")
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
